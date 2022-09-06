@@ -10,6 +10,9 @@
 
 This shell script repacks(!) an EFI and MBR bootable auto installation iso9660 container using a modified grub.cfg, custom user-data and meta-data files based on the latest (daily) Ubuntu 22.04.x LTS ISO.
 
+This script is build upon many sources over GitHub and AskUbuntu as well as sample by PudgetSystems, if I remember correctly.
+Especially the xorriso part is not my work, I only did the research and bash stuff.
+
 Note, that using an entirely automated ISO outside AND INSIDE of testing environments can have fatal results for your project.
 You will be notified of that once each use unless you alternate the script yourself.
 
