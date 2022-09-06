@@ -7,6 +7,9 @@
     <a href="https://github.com/PaxJaromeMalues/ubuntu-server-autoinstall-iso-repacker/issues">
         <img src="https://img.shields.io/github/issues-raw/PaxJaromeMalues/ubuntu-server-autoinstall-iso-repacker.svg?label=Issues" alt="Issues">
     </a>
+    <a href="https://cloudinit.readthedocs.io/en/latest/index.html">
+        <img src="https://img.shields.io/badge/cloud-init-blue.svg" alt="Cloud-Init Documentation">
+    </a>
 
 This shell script repacks(!) an EFI and MBR bootable auto installation iso9660 container using a modified grub.cfg, custom user-data and meta-data files based on the latest (daily) Ubuntu 22.04.x LTS ISO.
 
