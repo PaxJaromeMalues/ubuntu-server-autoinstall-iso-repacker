@@ -1,0 +1,68 @@
+#cloud-config
+autoinstall:
+  version: 1
+  locale: en_US.UTF-8
+  refresh-installer:
+    update: true
+  timezone: Europe/Berlin
+  keyboard:
+    layout: us
+    #variant: nodeadkeys
+  #network:
+    #version: 2
+    #ethernets:
+      #dhcp4: true
+  storage:
+    layout:
+      name: direct
+      #match:
+        #ssd: true
+  ntp:
+    enabled: true
+    ntp_client: chrony
+  identity:
+    hostname: norman
+    username: admin
+    realname: Norman Norman
+    password: #place "openssl passwd -6" crypted PW here
+  fqdn: norman.localhost
+  ssh:
+    disable_root: true
+    ssh_genkeytypes: [ed25519] #PATRIOT ACT independent encryption algorythm, broadly accepted, heavily suggest using this
+    emit_keys_to_console: false
+    #allow-pw: true
+    install-server: true
+  snaps:
+    - name: firefox
+      channel: esr/stable
+      classic: false
+  packages:
+    - vim
+    - htop
+    - curl
+    - wget
+    - screen
+    - ubuntu-desktop-minimal^
+  package_update: false
+  package_upgrade: false
+  late-commands:
+    #- curtin in-target --target=/target --
+    - curtin in-target --target=/target -- systemctl set-default graphical.target #see line 52
+    - curtin in-target --target=/target -- mkdir /var/misc
+    - curtin in-target --target=/target -- sudo localectl set-locale en_US.UTF-8
+    - curtin in-target --target=/target -- wget -O /var/misc/somescript.sh https://gist.githubusercontent.com/USERNAME/NI/raw/NI/somescript.sh
+    - curtin in-target --target=/target -- sudo chmod +x /var/misc/somescript.sh
+    - curtin in-target --target=/target -- sudo /var/misc/somescript.sh
+users:
+- name: shopstaff
+  #shell: /bin/nologin
+  passwd: #place "openssl passwd -6" crypted PW here
+- name: finances
+  #shell: /bin/nologin
+  passwd: #place "openssl passwd -6" crypted PW here
+final_message: |
+  cloud-init has finished
+  version: $version
+  timestamp: $timestamp
+  datasource: $datasource
+  uptime: $uptime
