@@ -36,6 +36,11 @@ vidName=U22041SUBI #Volume-ID NOT filename of ISO!
 origIsoPath="${scriptPath}/../${isoName}.iso"
 mbrImage="${isoName}.mbr"
 efiImage="${isoName}.efi"
+checkWWW1="ubuntu.com"
+checkWWW2="google.com"
+checkPort=443
+checkOne=0
+checkTwo=0
 mbrPathUnpacked="${unpackedSourceISO}/boot/grub/i386-pc/eltorito.img"
 efiPart='--interval:appended_partition_2:all::'
 unpackedSourceISO="${scriptPath}/source-files/"
@@ -55,10 +60,29 @@ if test -f "${scriptPath}/../${isoName}.iso"; then
 fi
 
 if [[ $dlIso -eq 1 ]]; then
-	echo "Beep Boop preexisting ISO file recorgnized, downloading current daily server from:"
-	echo "${isoPathServer}"
-	wget -N ${isoPathServer}
-	mv ${scriptPath}/*.iso ${scriptPath}/../${isoName}.iso
+	echo "checking for internet connection..."
+	if (nc -z -w2 -v $checkWWW1 $checkPort); then
+		checkOne=1
+		echo "R: The internet appears to be available"
+	else
+		checkOne=0
+		echo "First connection failed, trying second..."
+		if (nc -z -w2 -v $checkWWW2 $checkPort); then
+			checkTwo=1
+			echo "R: The internet appears to be available"
+		else
+			checkTwo=0
+		fi
+	fi
+	if [[ $checkOne+$checkTwo -eq 0 ]]; then
+		echo "CRIT: This machine seems to have no connection to the internet, aborting!"
+		exit 404
+	else
+		echo "Downloading current daily server from:"
+		echo "${isoPathServer}"
+		wget -N ${isoPathServer}
+		mv ${scriptPath}/*.iso ${scriptPath}/../${isoName}.iso
+	fi
 fi
 
 echo "Removing old source-files directory if present"
