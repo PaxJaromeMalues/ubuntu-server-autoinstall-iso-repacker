@@ -53,16 +53,16 @@ if (test -z $checkAptBased); then
 	printf 'CRIT:10:unsupported distro: Your distribution is not of the debian kind, script will likely fail without manual adjustments!/n'
         exit 10
 else
-	#
+	echo ""
 fi
 
 if version=$(dpkg-query -W -f='${Version}' xorriso 2>/dev/null); then
 
-	if dpkg --compare-versions "$version" '<' 1.5.4; then
+	if dpkg --compare-versions "$version" 'le' 1.5.4; then
 		echo "CRIT:prerequisite:version: XORRISO is below version 1.5.4 which means it likely is flawed with an issue common to interfere with this scripts purpose!"
 		exit 65
 	else
-		#
+		echo ""
 	fi
 
 else
@@ -74,7 +74,7 @@ fi
 
 if version=$(dpkg-query -W -f='${Version}' p7zip-full 2>/dev/null); then
 
-       #package installed
+       echo ""
 
 else
         echo "CRIT:65: Your are missing the required package p7zip"
