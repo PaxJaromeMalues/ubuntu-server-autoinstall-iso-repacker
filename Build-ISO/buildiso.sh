@@ -45,8 +45,42 @@ mbrPathUnpacked="${unpackedSourceISO}/boot/grub/i386-pc/eltorito.img"
 efiPart='--interval:appended_partition_2:all::'
 unpackedSourceISO="${scriptPath}/source-files/"
 dlIso=1
+checkAptBased=$(cat /etc/os-release | grep -i ID_Like=debian);
 
 echo "Predefined variables set"
+
+if (test -z $checkAptBased); then
+	printf 'CRIT:10:unsupported distro: Your distribution is not of the debian kind, script will likely fail without manual adjustments!/n'
+        exit 10
+else
+	echo ""
+fi
+
+if version=$(dpkg-query -W -f='${Version}' xorriso 2>/dev/null); then
+
+	if dpkg --compare-versions "$version" 'le' 1.5.4; then
+		echo "CRIT:prerequisite:version: XORRISO is below version 1.5.4 which means it likely is flawed with an issue common to interfere with this scripts purpose!"
+		exit 65
+	else
+		echo ""
+	fi
+
+else
+	echo "CRIT:65: Your are missing the required package xorriso"
+	echo "install via: sudo apt install xorriso"
+	exit 65
+
+fi
+
+if version=$(dpkg-query -W -f='${Version}' p7zip-full 2>/dev/null); then
+
+       echo ""
+
+else
+        echo "CRIT:65: Your are missing the required package p7zip"
+        echo "install via: sudo apt install p7zip-full"
+	exit 65
+fi
 
 useIso=NULL
 if test -f "${scriptPath}/../${isoName}.iso"; then
