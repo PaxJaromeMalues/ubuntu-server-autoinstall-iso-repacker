@@ -44,12 +44,12 @@ autoinstall:
     - ubuntu-desktop-minimal^
   late-commands:
     #- curtin in-target --target=/target --
-    - curtin in-target --target=/target -- systemctl set-default graphical.target #see line 52
-    - curtin in-target --target=/target -- mkdir /var/misc
-    - curtin in-target --target=/target -- sudo localectl set-locale en_US.UTF-8
-    - curtin in-target --target=/target -- wget -O /var/misc/somescript.sh https://gist.githubusercontent.com/USERNAME/NI/raw/NI/somescript.sh
-    - curtin in-target --target=/target -- sudo chmod +x /var/misc/somescript.sh
-    - curtin in-target --target=/target -- sudo /var/misc/somescript.sh
+    - curtin in-target --target=/target -- systemctl set-default graphical.target #see line 44
+#    - curtin in-target --target=/target -- mkdir /var/misc
+#    - curtin in-target --target=/target -- sudo localectl set-locale en_US.UTF-8 #testing workaround for an local bug with subiquity<->cloud-init
+#    - curtin in-target --target=/target -- wget -O /var/misc/somescript.sh https://gist.githubusercontent.com/USERNAME/NI/raw/NI/somescript.sh
+#    - curtin in-target --target=/target -- sudo chmod +x /var/misc/somescript.sh
+#    - curtin in-target --target=/target -- sudo /var/misc/somescript.sh
 #  user-data:
 #    users:
 #      - name: shopstaff
