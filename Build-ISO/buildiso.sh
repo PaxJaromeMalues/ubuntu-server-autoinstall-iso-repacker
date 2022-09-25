@@ -13,10 +13,10 @@ echo "THIS SCRIPT WILL PRODUCE AN ISO WHICH WILL"
 echo "AUTOMATICALLY BOOT AND REMOVE ANY DATA ON THE"
 echo "PRIMARY DRIVE DEFINED IN THE USER-DATA FILE!"
 echo "--------ATTENTION ATTENTION ATTENTION--------"
-read -p "HAVE YOU UNDERSTOOD THAT THIS IS DANGEROUS IF HANDLED INCORRECTLY (YES/no) ?" securityq
+read -p "HAVE YOU UNDERSTOOD THAT THIS IS DANGEROUS IF HANDLED INCORRECTLY (yes/NO) ?" securityq
 case "$securityq" in
 	yes|YES ) echo "Confirmed";;
-	* ) echo "User aborted the execution" & exit 0;;
+	* ) echo "You maybe just saved your setup, good choice" & exit 0;;
 esac
 
 echo "Extracting script path..."
@@ -86,9 +86,9 @@ useIso=NULL
 if test -f "${scriptPath}/../${isoName}.iso"; then
 	echo ""
 	echo "----USER INPUT REQUESTED----"
-	read -p "A source ISO file is already present, should it be used? (Y/n) ?" useIso
+	read -p "A source ISO file is already present, should it be used? (yes/NO) ?" useIso
 	case "$useIso" in
-		y|Y ) dlIso=0;;
+		yes|YES ) dlIso=0;;
 		* ) dlIso=1;;
 	esac
 fi
@@ -135,9 +135,9 @@ if test -d "${scriptPath}/source-files/boot/grub/x86_64-efi"; then
 else
 	echo ""
 	echo "----USER INPUT REQUESTED----"
-	read -p "CRIT: No structure found in unpacked ISO matching Ubuntu 22.04.1 original ISO tree! Do you wish to execute anyway (Y/n) ?" override
+	read -p "CRIT: No structure found in unpacked ISO matching Ubuntu 22.04.1 original ISO tree! Do you wish to execute anyway (yes/NO) ?" override
 	case "$override" in
-		y|Y ) echo "Continuing..." ;;
+		yes|YES ) echo "Continuing..." ;;
 		* ) exit 3;;
 	esac
 fi
@@ -183,9 +183,9 @@ dd if="$origIsoPath" bs=512 skip="$skip" count="$size" of=${scriptPath}/"$efiIma
 echo ""
 echo "----USER INPUT REQUESTED----"
 testing=NULL
-read -p "Is the repacked ISO thought for testing (Y/n) ?" testing
+read -p "Is the repacked ISO thought for testing (yes/NO) ?" testing
 case "$testing" in
-	y|Y ) outName=${isoName}-testing;;
+	yes|YES ) outName=${isoName}-testing;;
 	* ) outName=${isoName};;
 esac
 
@@ -214,9 +214,11 @@ rm ${scriptPath}/${mbrImage}
 echo "EFI Image"
 rm ${scriptPath}/${efiImage}
 cleanup=NULL
-read -p "Should the produced source-files directory be removed (Y/n) ?" cleanup
+echo ""
+echo "----USER INPUT REQUESTED----"
+read -p "Should the produced source-files directory be removed (yes/NO) ?" cleanup
 case "$cleanup" in
-	y|Y ) rm -rf ${scriptPath}/source-files;;
+	yes|YES ) rm -rf ${scriptPath}/source-files;;
 	* ) echo "source-files directory will not be removed"
 esac
 echo "Clean up finished."
