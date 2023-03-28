@@ -1,8 +1,8 @@
-# ubuntu-server-autoinstall-iso-repacker
+# ubuntu-server-autoinstall-iso-creator
 </p>
 <p align="center">
     <a href="https://github.com/PaxJaromeMalues/ubuntu-server-autoinstall-iso-repacker/releases/latest">
-        <img src="https://img.shields.io/badge/Version-1.1.333-green.svg" alt="Version">
+        <img src="https://img.shields.io/badge/Version-1.2.0-green.svg" alt="Version">
     </a>
     <a href="https://github.com/PaxJaromeMalues/ubuntu-server-autoinstall-iso-repacker/issues">
         <img src="https://img.shields.io/github/issues-raw/PaxJaromeMalues/ubuntu-server-autoinstall-iso-repacker.svg?label=Issues" alt="Issues">
@@ -12,7 +12,7 @@
     </a>
 </p>
 
-This shell script repacks(!) an EFI and MBR bootable auto installation iso9660 container using a modified grub.cfg, custom user-data and meta-data files based on the latest (daily) Ubuntu 22.04.x LTS ISO.
+This shell script repacks(!) an EFI and MBR bootable auto installation iso9660 container with cloud-init consumable user-data using a modified grub.cfg, custom user-data and meta-data files based on the latest (daily) Ubuntu 22.04.x LTS ISO.
 
 This script is build upon many sources over GitHub and AskUbuntu as well as sample by PudgetSystems, if I remember correctly.
 Especially the xorriso part is not my work, I only did the research and bash stuff.
