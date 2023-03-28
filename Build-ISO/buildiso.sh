@@ -2,7 +2,7 @@
 # Script-Name:	buildiso
 # Description:	Guided creation of an ISO File for Subiquity deployment
 # Author:		Jan-Philipp Jürgens
-# Version:		1.2 modified
+# Version:		1.2.0
 # Last changed:	28MAR23
 # Permissions:	This script is in no need of sudo permissions!
 
