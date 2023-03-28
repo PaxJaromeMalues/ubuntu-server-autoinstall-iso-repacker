@@ -1,24 +1,33 @@
 #!/bin/bash
-#This script is in no need of sudo permissions!
-echo "---------------------------------------------"
-echo "---Subiquity Auto Installation ISO Creator---"
-echo "--------BOOT via EFI and MBR likewise--------"
-echo "---------------------------------------------"
+# Script-Name:	buildiso
+# Description:	Guided creation of an ISO File for Subiquity deployment
+# Author:		Jan-Philipp Jürgens
+# Version:		1.2.0
+# Last changed:	28MAR23
+# Permissions:	This script is in no need of sudo permissions!
+
+echo "----------------------------------------------"
+echo "---Subiquity Auto Installation ISO Repacker---"
+echo "--------BOOT via EFI and MBR likewise---------"
+echo "----------------------------------------------"
 echo "To make use of the Canonical HWE-Kernel you"
 echo "need to modify the grub.cfg on dir above!"
-echo "---------------------------------------------"
+echo "----------------------------------------------"
 echo ""
-echo "--------ATTENTION ATTENTION ATTENTION--------"
+echo "--------ATTENTION ATTENTION ATTENTION---------"
 echo "THIS SCRIPT WILL PRODUCE AN ISO WHICH WILL"
 echo "AUTOMATICALLY BOOT AND REMOVE ANY DATA ON THE"
 echo "PRIMARY DRIVE DEFINED IN THE USER-DATA FILE!"
-echo "--------ATTENTION ATTENTION ATTENTION--------"
-read -p "HAVE YOU UNDERSTOOD THAT THIS IS DANGEROUS IF HANDLED INCORRECTLY (YES/no) ?" securityq
+echo "--------ATTENTION ATTENTION ATTENTION---------"
+echo ""
+echo "HAVE YOU UNDERSTOOD THAT THIS IS DANGEROUS IF HANDLED INCORRECTLY?"
+read -p "(yes/no) " securityq
 case "$securityq" in
 	yes|YES ) echo "Confirmed";;
-	* ) echo "User aborted the execution" & exit 0;;
+	* ) echo "User aborted the execution" & exit 188;;
 esac
 
+echo ""
 echo "Extracting script path..."
 
 scriptPath="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
@@ -28,33 +37,41 @@ if [ -z "$scriptPath" ]; then
 else
 	echo "Path found: ${scriptPath}"
 fi
+
+echo ""
 echo "Setting up predefined variables..."
 
-isoPathServer=https://cdimage.ubuntu.com/ubuntu-server/jammy/daily-live/current/jammy-live-server-amd64.iso
-isoName=jammy-live-server-amd64
-vidName=U22041SUBI #Volume-ID NOT filename of ISO!
-origIsoPath="${scriptPath}/../${isoName}.iso"
-mbrImage="${isoName}.mbr"
-efiImage="${isoName}.efi"
+branding=MYPROJECT
+checkOne=0
+checkPort=443
+checkTwo=0
 checkWWW1="ubuntu.com"
 checkWWW2="google.com"
-checkPort=443
-checkOne=0
-checkTwo=0
-mbrPathUnpacked="${unpackedSourceISO}/boot/grub/i386-pc/eltorito.img"
-efiPart='--interval:appended_partition_2:all::'
-unpackedSourceISO="${scriptPath}/source-files/"
+cleanup=NULL
 dlIso=1
+efiImage="${isoName}.efi"
+efiPart='--interval:appended_partition_2:all::'
+ISOcargo=NULL
+isoName=jammy-live-server-amd64
+isoPathServer=https://cdimage.ubuntu.com/ubuntu-server/jammy/daily-live/current/jammy-live-server-amd64.iso
+mbrImage="${isoName}.mbr"
+mbrPathUnpacked="${unpackedSourceISO}/boot/grub/i386-pc/eltorito.img"
+origIsoPath="${scriptPath}/../${isoName}.iso"
+testing=NULL
+unpackedSourceISO="${scriptPath}/source-files/"
+useIso=NULL
+vidName=U2204SUBI #Volume-ID NOT filename of ISO!
 
 echo "Predefined variables set"
 
-useIso=NULL
 if test -f "${scriptPath}/../${isoName}.iso"; then
 	echo ""
 	echo "----USER INPUT REQUESTED----"
-	read -p "A source ISO file is already present, should it be used? (Y/n) ?" useIso
+	echo "A source ISO file is already present, should it be used?"
+	read -p "(Y/n) " useIso
 	case "$useIso" in
 		y|Y ) dlIso=0;;
+		"" ) dlIso=0;;
 		* ) dlIso=1;;
 	esac
 fi
@@ -85,51 +102,62 @@ if [[ $dlIso -eq 1 ]]; then
 	fi
 fi
 
+echo ""
 echo "Removing old source-files directory if present"
 if test -d "${scriptPath}/source-files"; then
 	rm -rf ${scriptPath}/source-files
 fi
 
-echo "Unpacking ISO container to ${scriptPath}/source-files..."
 echo ""
+echo "Unpacking ISO container to ${scriptPath}/source-files..."
 7z -y x ${scriptPath}/../${isoName}.iso -o${scriptPath}/source-files
 
 if test -d "${scriptPath}/source-files/boot/grub/x86_64-efi"; then
+	echo ""
 	echo "Unpacked ISO content found..."
 	echo "Creating nocloud directory in source-files..."
 	mkdir ${scriptPath}/source-files/nocloud
 else
 	echo ""
 	echo "----USER INPUT REQUESTED----"
-	read -p "CRIT: No structure found in unpacked ISO matching Ubuntu 22.04.1 original ISO tree! Do you wish to execute anyway (Y/n) ?" override
+	echo "CRIT: No structure found in unpacked ISO matching Ubuntu 22.04.1 original ISO tree!"
+	echo "Do you wish to execute anyway?"
+	read -p "(Y/n) " override
 	case "$override" in
-		y|Y ) echo "Continuing..." ;;
+		y|Y ) echo "Continuing...";;
+		"" ) echo "Continuing...";;
 		* ) exit 3;;
 	esac
 fi
 
 if test -f "${scriptPath}/../user-data"; then
+	echo ""
 	echo "A user-data file has been found in head directory, copying to source-files"
 	cp ${scriptPath}/../user-data ${scriptPath}/source-files/nocloud
 else
-	echo "CRIT: This script requires a user-data file present in ../"
+	echo ""
+	echo "CRIT: This script requires a user-data file present in ../."
 	exit 2
 fi
 
+echo ""
 echo "Creating empty meta-data file"
 touch ${scriptPath}/source-files/nocloud/meta-data
 
 if test -f "${scriptPath}/../grub.cfg"; then
+	echo ""
 	echo "A grub.cfg was found, copying ..."
 	cp ${scriptPath}/../grub.cfg ${scriptPath}/source-files/boot/grub
 	echo "replacing ISO loopback.cfg with grub.cfg duplicate..."
 	cp ${scriptPath}/../grub.cfg ${scriptPath}/source-files/boot/grub/loopback.cfg
 else
-	echo "CRIT: This script requires a grub.cfg file present in ../"
+	echo ""
+	echo "CRIT: This script requires a grub.cfg file present in ../."
 	exit 2
 fi
 
 if test -f "${scriptPath}/${isoName}.mbr"; then
+	echo ""
 	echo "An old MBR Image was found, moving to .mbr.old"
 	mv ${scriptPath}/${isoName}.mbr ${scriptPath}/${isoName}.mbr.old
 fi
@@ -148,13 +176,15 @@ dd if="$origIsoPath" bs=512 skip="$skip" count="$size" of=${scriptPath}/"$efiIma
 
 echo ""
 echo "----USER INPUT REQUESTED----"
-testing=NULL
-read -p "Is the repacked ISO thought for testing (Y/n) ?" testing
+echo "Is the repacked ISO thought for testing purposes?"
+read -p "(y/N) " testing
 case "$testing" in
-	y|Y ) outName=${isoName}-testing;;
-	* ) outName=${isoName};;
+	y|Y ) outName=${branding}-${isoName}-testing;;
+	"" ) outName=${branding}-${isoName};;
+	* ) outName=${branding}-${isoName};;
 esac
 
+echo ""
 echo "Searching user-data and meta-data files in source-files directory..."
 if test -f "${unpackedSourceISO}/nocloud/user-data"; then
 	echo "user-data file found"
@@ -170,27 +200,68 @@ else
 	exit 2
 fi
 
+echo ""
+echo "----USER INPUT REQUESTED----"
+echo "If you have placed files in the head dicrectory cargo folder"
+echo "Do you want these to be included in the repacked ISO?"
+read -p "(y/N) " cargoq
+case "$cargoq" in
+	y|Y ) ISOcargo=1;;
+	"" ) ISOcargo=0;;
+	* ) ISOcargo=0;;
+esac
+
+if [ $ISOcargo -eq 1 ]; then
+	echo "All files contained in ../cargo will be copied to: ISOroot/cargo/"
+	echo "These files will be available in cloud-init via /cdrom/cargo/yourfile"
+	if [ ! -d "${unpackedSourceISO}/cargo" ]; then
+		mkdir "${unpackedSourceISO}/cargo"
+	fi
+	cp ${scriptPath}/../cargo/* ${unpackedSourceISO}/cargo/
+	echo "done copying."
+else
+	echo "Custom cargo will not be transfered!"
+fi
+
+echo ""
 echo "Starting ISO repacking..."
 
 xorriso -as mkisofs -r -V ${vidName} -J -joliet-long -l -iso-level 3 -o ./${outName}.iso --grub2-mbr ${scriptPath}/${mbrImage} -partition_offset 16 --mbr-force-bootable -append_partition 2 0xEF ./${efiImage} -appended_part_as_gpt -c '/boot.catalog' -b ${mbrPathUnpacked} -no-emul-boot -boot-load-size 4 -boot-info-table --grub2-boot-info -eltorito-alt-boot -e ${efiPart} -no-emul-boot ${unpackedSourceISO}
+
+if test -f "${scriptPath}/${outName}.iso"; then
+	echo ""
+	echo "Repacked ISO found. Initiating final CleanUP."
+else
+	echo ""
+	echo "CRIT: There is no ISO File where a repacked ISO File should be :<"
+	echo "Something went wrong! Check files and structure and rerun."
+	exit 2
+fi
 
 echo "CleanUP..."
 echo "MBR Image"
 rm ${scriptPath}/${mbrImage}
 echo "EFI Image"
 rm ${scriptPath}/${efiImage}
-cleanup=NULL
-read -p "Should the produced source-files directory be removed (Y/n) ?" cleanup
+echo ""
+echo "----USER INPUT REQUESTED----"
+echo "Should the produced source-files directory be removed?"
+read -p "(Y/n) " cleanup
 case "$cleanup" in
 	y|Y ) rm -rf ${scriptPath}/source-files;;
-	* ) echo "source-files directory will not be removed"
+	"" ) rm -rf ${scriptPath}/source-files;;
+	* ) echo ""; echo "source-files directory will not be removed";;
 esac
 echo "Clean up finished."
 
 echo ""
 echo "--------------------------------------------------------------------------------------"
 echo "To make the ISO file available to QEMU/KVM via virt-manager use the following command:"
-echo "sudo cp ./${outName}.iso /var/lib/libvirt/images"
+echo "   sudo cp ./${outName}.iso /var/lib/libvirt/images"
+echo "--------------------------------------------------------------------------------------"
+echo "Thank you for using the Subiquity Auto Installation ISO Repacker!"
+echo "If you encountered problems or want a feature added visit:"
+echo "https://github.com/PaxJaromeMalues/ubuntu-server-autoinstall-iso-repacker"
 echo "--------------------------------------------------------------------------------------"
 
 exit 0
