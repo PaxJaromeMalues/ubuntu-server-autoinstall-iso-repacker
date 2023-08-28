@@ -2,7 +2,7 @@
 # Script-Name:	buildiso
 # Description:	Guided creation of an ISO File for Subiquity deployment
 # Author:		Jan-Philipp Jürgens
-# Version:		1.2.0
+# Version:		1.2.2
 # Last changed:	28MAR23
 # Permissions:	This script is in no need of sudo permissions!
 
@@ -40,7 +40,7 @@ fi
 echo "Setting up predefined variables..."
 
 ISOcargo=NULL
-branding=llposfull
+branding=YOUR_BRAND_HERE
 checkAptBased=$(cat /etc/os-release | grep -i ID_Like=debian);
 checkOne=0
 checkPort=443
