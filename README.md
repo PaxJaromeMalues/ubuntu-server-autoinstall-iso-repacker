@@ -1,15 +1,15 @@
 # ubuntu-server-autoinstall-iso-creator
 </p>
 <p align="center">
-    <a href="https://github.com/PaxJaromeMalues/ubuntu-server-autoinstall-iso-repacker/releases/latest">
-        <img src="https://img.shields.io/badge/Version-1.2.0-green.svg" alt="Version">
-    </a>
-    <a href="https://github.com/PaxJaromeMalues/ubuntu-server-autoinstall-iso-repacker/issues">
-        <img src="https://img.shields.io/github/issues-raw/PaxJaromeMalues/ubuntu-server-autoinstall-iso-repacker.svg?label=Issues" alt="Issues">
-    </a>
-    <a href="https://cloudinit.readthedocs.io/en/latest/index.html">
-        <img src="https://img.shields.io/badge/cloud-init-blue.svg" alt="Cloud-Init Documentation">
-    </a>
+  <a href="https://github.com/PaxJaromeMalues/ubuntu-server-autoinstall-iso-repacker/releases/latest">
+    <img src="https://img.shields.io/badge/Version-1.2.1-green.svg" alt="Version">
+  </a>
+  <a href="https://github.com/PaxJaromeMalues/ubuntu-server-autoinstall-iso-repacker/issues">
+    <img src="https://img.shields.io/github/issues-raw/PaxJaromeMalues/ubuntu-server-autoinstall-iso-repacker.svg?label=Issues" alt="Issues">
+  </a>
+  <a href="https://cloudinit.readthedocs.io/en/latest/index.html">
+    <img src="https://img.shields.io/badge/cloud-init-blue.svg" alt="Cloud-Init Documentation">
+  </a>
 </p>
 
 This shell script repacks(!) an EFI and MBR bootable auto installation iso9660 container with cloud-init consumable user-data using a modified grub.cfg, custom user-data and meta-data files based on the latest (daily) Ubuntu 22.04.x LTS ISO.
