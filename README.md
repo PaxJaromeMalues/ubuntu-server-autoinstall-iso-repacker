@@ -2,7 +2,7 @@
 </p>
 <p align="center">
   <a href="https://github.com/PaxJaromeMalues/ubuntu-server-autoinstall-iso-repacker/releases/latest">
-    <img src="https://img.shields.io/badge/Version-1.2.1-green.svg" alt="Version">
+    <img src="https://img.shields.io/badge/Version-1.2.2-green.svg" alt="Version">
   </a>
   <a href="https://github.com/PaxJaromeMalues/ubuntu-server-autoinstall-iso-repacker/issues">
     <img src="https://img.shields.io/github/issues-raw/PaxJaromeMalues/ubuntu-server-autoinstall-iso-repacker.svg?label=Issues" alt="Issues">
