@@ -165,13 +165,36 @@ fi
 
 if test -f "${scriptPath}/../user-data"; then
 	echo ""
-	echo "A user-data file has been found in head directory, copying to source-files"
+	echo "A user-data file has been found in head directory."
+	echo ""
+	echo "----USER INPUT REQUESTED----"
+	echo "Do you want to use cloud-init parser feature to check the user-data file for syntax errors?"
+	read -p "(Y/n) " checkSyntaxQ
+	case "$checkSyntaxQ" in
+		y|Y ) cloud-init schema --config-file ${scriptPath}/../user-data;;
+		"" ) cloud-init schema --config-file ${scriptPath}/../user-data;;
+		* ) echo "Not checking for file syntax." & checkSyntax=0;;
+	esac
+	echo ""
+	echo "----USER INPUT REQUESTED----"
+	echo "Based on the outcome of the Syntax Parser, would you like do continue?"
+	echo "BEWARE that using user-data files with broken syntax might result in"
+	echo "a broken and unusable operating system!"
+	read -p "(Y/n) " goodSyntaxQ
+	case "$goodSyntaxQ" in
+		y|Y ) echo "continuing...";;
+		"" ) echo "continuing...";;
+		* ) echo "User aborted the script!" & goodSyntax=0 & exit 188;;
+	esac
+	echo "Copying user-data file from head directory to source-files..."
 	cp ${scriptPath}/../user-data ${scriptPath}/source-files/nocloud
 else
 	echo ""
 	echo "CRIT: This script requires a user-data file present in ../."
+	echo "CRIT: Either no file is present or the present file is not readable."
 	exit 2
 fi
+
 echo ""
 echo "Creating empty meta-data file"
 touch ${scriptPath}/source-files/nocloud/meta-data
