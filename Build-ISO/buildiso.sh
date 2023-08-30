@@ -23,8 +23,10 @@ echo ""
 echo "HAVE YOU UNDERSTOOD THAT THIS IS DANGEROUS IF HANDLED INCORRECTLY?"
 read -p "(yes/no) " securityq
 case "$securityq" in
-	yes|YES ) echo "Confirmed";;
-	* ) echo "User aborted the execution" & exit 188;;
+	yes|YES|y|Y ) echo "Confirmed";;
+	no|NO|n|N ) echo "NO selected, aborting." & exit 188;;
+	"" ) echo "not providing an entry is invalid for security questions!" & exit 188;;
+	* ) echo "no valid entry" & exit 188;;
 esac
 
 echo ""
